@@ -1,0 +1,38 @@
+name: 部署 Firebase Functions
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: '部署環境'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - development
+
+jobs:
+  deploy_functions:
+    name: 部署 Firebase Functions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: 設置 Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: 安裝 Functions 依賴
+        run: |
+          cd functions
+          npm ci
+      - name: 建構 Functions
+        run: |
+          cd functions
+          npm run build
+      - name: 部署到 Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}

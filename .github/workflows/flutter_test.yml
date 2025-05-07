@@ -1,0 +1,25 @@
+name: Flutter 測試
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  analyze_and_test:
+    name: 分析和測試
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: 設置 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+          channel: 'stable'
+      - name: 獲取依賴
+        run: flutter pub get
+      - name: 分析代碼
+        run: flutter analyze
+      - name: 運行測試
+        run: flutter test

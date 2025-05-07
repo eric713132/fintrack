@@ -1,0 +1,40 @@
+name: 構建並分發 App
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: '版本名稱 (例如: 1.0.0)'
+        required: true
+        default: ''
+
+jobs:
+  build_android:
+    name: 構建 Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: 設置 Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      - name: 設置 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+          channel: 'stable'
+      - name: 獲取依賴
+        run: flutter pub get
+      - name: 更新版本
+        uses: javierdwd/flutter-version@v1
+        with:
+          version-name: ${{ github.event.inputs.version_name }}
+          version-code: ${{ github.run_number }}
+      - name: 構建 APK
+        run: flutter build apk --release
+      - name: 上傳 APK 作為構件
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
