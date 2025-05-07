@@ -1,0 +1,41 @@
+name: fintrack
+description: A financial tracking app with Flutter, Firebase and Finnhub API.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase related - 更新到 3.x 版本
+  firebase_core: ^3.13.0
+  firebase_auth: ^5.0.0  # 更新到兼容 firebase_core 3.x 的版本
+  cloud_firestore: ^5.0.0  # 更新到兼容 firebase_core 3.x 的版本
+  cloud_functions: ^5.0.0  # 更新到兼容 firebase_core 3.x 的版本
+  firebase_data_connect: ^0.1.4  # 使用最新版本
+  
+  # State management
+  provider: ^6.1.1
+  
+  # API requests
+  dio: ^5.4.0
+  
+  # UI components
+  fl_chart: ^0.71.0
+  intl: ^0.19.0
+  uuid: ^4.2.2
+  
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

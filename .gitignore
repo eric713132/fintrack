@@ -1,0 +1,37 @@
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+.pub/
+
+# Firebase
+firebase-debug.log
+ui-debug.log
+.firebase/
+.runtimeconfig.json
+functions/lib/  # 只忽略 functions 下的 lib 目錄
+
+# Node.js
+node_modules/
+functions/node_modules/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Local environment
+.env
+*.log
+google-services.json
+GoogleService-Info.plist
+
+# Sensitive files
+*.jks
+*.keystore
+*.p8
+*.p12
+*.key
+*.mobileprovision

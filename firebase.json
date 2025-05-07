@@ -1,0 +1,67 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "myinvestmentapp-7ade6",
+          "appId": "1:996364339289:android:81e72a9503ffaafac40948",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "myinvestmentapp-7ade6",
+          "configurations": {
+            "android": "1:996364339289:android:81e72a9503ffaafac40948",
+            "ios": "1:996364339289:ios:3b762cb20e6765bfc40948",
+            "macos": "1:996364339289:ios:3b762cb20e6765bfc40948",
+            "web": "1:996364339289:web:5ba0d4e8aa5ae991c40948",
+            "windows": "1:996364339289:web:531c62fd53b5fcc6c40948"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint",
+        "npm --prefix \"$RESOURCE_DIR\" run build"
+      ]
+    }
+  ],
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "emulators": {
+    "auth": {
+      "port": 9099
+    },
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  },
+  "remoteconfig": {
+    "template": "remoteconfig.template.json"
+  }
+}

@@ -1,0 +1,144 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 預設：拒絕所有未明確允許的路徑存取
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // --- 輔助函數 ---
+    // 驗證金額
+    function isValidAmount(amount) {
+      return amount is number && 
+             amount > 0 && 
+             amount <= 10000000; // 設置上限，防止異常值
+    }
+    
+    // 驗證交易類型
+    function isValidTransactionType(type) {
+      return type is string && 
+             (type == 'income' || type == 'expense');
+    }
+    
+    // 驗證類別
+    function isValidCategory(category) {
+      return category is string && 
+             category.size() > 0 && 
+             category.size() <= 30;
+    }
+    
+    // 驗證日期
+    function isValidDate(date) {
+      return date is timestamp;
+    }
+    
+    // 驗證描述
+    function isValidDescription(description) {
+      return description is string && 
+             description.size() <= 200;
+    }
+    
+    // 驗證股票代碼格式 (保留原功能)
+    function isValidTicker(ticker) {
+      return ticker is string && 
+             ticker.size() > 0 && 
+             ticker.size() <= 10 &&
+             ticker.matches('^[A-Za-z0-9\\.\\-]{1,10}$');
+    }
+    
+    // --- 使用者資料規則 ---
+    // 基本使用者文檔訪問規則
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // 交易記錄規則
+    match /transactions/{transactionId} {
+      // 允許讀取自己的交易
+      allow read: if request.auth != null && 
+                    resource.data.userId == request.auth.uid;
+      
+      // 允許創建（帶數據驗證）
+      allow create: if request.auth != null && 
+                      request.resource.data.userId == request.auth.uid &&
+                      // 必要欄位驗證
+                      isValidAmount(request.resource.data.amount) &&
+                      isValidTransactionType(request.resource.data.type) &&
+                      isValidCategory(request.resource.data.category) &&
+                      isValidDate(request.resource.data.date) &&
+                      isValidDescription(request.resource.data.description);
+      
+      // 允許更新（帶數據驗證）
+      allow update: if request.auth != null && 
+                      resource.data.userId == request.auth.uid &&
+                      request.resource.data.userId == request.auth.uid &&
+                      // 不允許變更使用者ID
+                      request.resource.data.userId == resource.data.userId &&
+                      // 其他欄位驗證
+                      ("amount" in request.resource.data ? 
+                        isValidAmount(request.resource.data.amount) : true) &&
+                      ("type" in request.resource.data ? 
+                        isValidTransactionType(request.resource.data.type) : true) &&
+                      ("category" in request.resource.data ? 
+                        isValidCategory(request.resource.data.category) : true) &&
+                      ("date" in request.resource.data ? 
+                        isValidDate(request.resource.data.date) : true) &&
+                      ("description" in request.resource.data ? 
+                        isValidDescription(request.resource.data.description) : true);
+      
+      // 允許刪除自己的交易
+      allow delete: if request.auth != null && 
+                      resource.data.userId == request.auth.uid;
+    }
+    
+    // 用戶設定規則
+    match /user_settings/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // 預算規則
+    match /budgets/{budgetId} {
+      allow read: if request.auth != null && 
+                    resource.data.userId == request.auth.uid;
+      allow write: if request.auth != null && 
+                     request.resource.data.userId == request.auth.uid;
+    }
+    
+    // 財務目標規則
+    match /financial_goals/{goalId} {
+      allow read: if request.auth != null && 
+                    resource.data.userId == request.auth.uid;
+      allow write: if request.auth != null && 
+                     request.resource.data.userId == request.auth.uid;
+    }
+    
+    // 股票投資組合規則 (如果需要保留此功能)
+    match /portfolios/{portfolioId} {
+      allow read: if request.auth != null && 
+                    resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                      request.resource.data.userId == request.auth.uid &&
+                      isValidTicker(request.resource.data.ticker);
+      allow update: if request.auth != null && 
+                      resource.data.userId == request.auth.uid &&
+                      request.resource.data.userId == resource.data.userId;
+      allow delete: if request.auth != null && 
+                      resource.data.userId == request.auth.uid;
+    }
+    
+    // --- 公開資料規則 ---
+    // 股票價格數據 (如果需要保留此功能)
+    match /stock_prices/{tickerSymbol} {
+      // 允許任何人讀取
+      allow read: if true;
+      // 不允許客戶端寫入
+      allow write: if false;
+    }
+    
+    // 交易類別預設值
+    match /app_defaults/categories {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}
