@@ -26,6 +26,8 @@ jobs:
           channel: 'stable'
       - name: 獲取依賴
         run: flutter pub get
+      - name: 靜態分析
+        run: flutter analyze
       - name: 更新版本
         uses: javierdwd/flutter-version@v1
         with:

@@ -35,3 +35,6 @@ GoogleService-Info.plist
 *.p12
 *.key
 *.mobileprovision
+
+# Cursor 設定與規則
+.cursor/
