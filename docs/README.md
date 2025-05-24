@@ -4,6 +4,7 @@
 
 ## 文件結構
 
+- **project-structure.md**：專案結構與技術棧說明，包含代碼規範與文件維護指引
 - **architecture/overview.md**：系統三層分層與技術棧概述
 - **architecture/data-flow.md**：數據流向與資料傳遞流程
 - **api/finnhub.md**：Finnhub API 串接與 webhook 格式
@@ -14,6 +15,7 @@
 - **flutter_test.yml**：自動執行 Flutter 測試、靜態分析，並產生測試覆蓋率（coverage），自動上傳到 Codecov，方便在 PR、Actions 或 Codecov 網站查閱覆蓋率報告。
 
 ## 查閱建議
+- **若需理解專案結構與代碼規範，請先看 project-structure.md**
 - 若需理解專案架構，請先看 architecture/overview.md
 - 若需查詢 API 串接或 webhook，請看 api/ 相關文件
 - 若需了解資料庫設計，請看 database/firestore.md
